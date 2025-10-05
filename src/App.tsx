@@ -2,7 +2,7 @@ import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import Auth from "./pages/Auth";
@@ -14,7 +14,7 @@ import Reels from "./pages/Reels";
 import Gyms from "./pages/Gyms";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -45,27 +45,26 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
-            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
-            <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
-            <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
-            <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <TooltipProvider>
+    <Toaster />
+    <Sonner />
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
+          <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+          <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
+          <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
+          <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  </TooltipProvider>
 );
+
 
 export default App;
