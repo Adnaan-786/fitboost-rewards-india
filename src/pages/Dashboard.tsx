@@ -222,16 +222,16 @@ const Dashboard = () => {
               <div className="text-sm font-medium">Challenges</div>
             </div>
           </Button>
+          <Button onClick={() => navigate('/events')} className="h-24" variant="outline">
+            <div className="text-center">
+              <div className="text-2xl mb-1">📅</div>
+              <div className="text-sm font-medium">Events</div>
+            </div>
+          </Button>
           <Button onClick={() => navigate('/rewards')} className="h-24" variant="outline">
             <div className="text-center">
               <div className="text-2xl mb-1">🎁</div>
               <div className="text-sm font-medium">Rewards</div>
-            </div>
-          </Button>
-          <Button onClick={() => navigate('/reels')} className="h-24" variant="outline">
-            <div className="text-center">
-              <div className="text-2xl mb-1">📱</div>
-              <div className="text-sm font-medium">Social Reels</div>
             </div>
           </Button>
           <Button onClick={() => navigate('/gyms')} className="h-24" variant="outline">

@@ -44,6 +44,107 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          event_id: string
+          id: string
+          registration_date: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          id?: string
+          registration_date?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          id?: string
+          registration_date?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string | null
+          current_participants: number | null
+          description: string | null
+          entry_fee: number | null
+          event_date: string
+          event_time: string | null
+          event_type: string
+          id: string
+          image_url: string | null
+          latitude: number | null
+          location_address: string
+          location_name: string
+          longitude: number | null
+          max_participants: number | null
+          organizer_id: string
+          prize_pool: number | null
+          registration_deadline: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_participants?: number | null
+          description?: string | null
+          entry_fee?: number | null
+          event_date: string
+          event_time?: string | null
+          event_type: string
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          location_address: string
+          location_name: string
+          longitude?: number | null
+          max_participants?: number | null
+          organizer_id: string
+          prize_pool?: number | null
+          registration_deadline?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_participants?: number | null
+          description?: string | null
+          entry_fee?: number | null
+          event_date?: string
+          event_time?: string | null
+          event_type?: string
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          location_address?: string
+          location_name?: string
+          longitude?: number | null
+          max_participants?: number | null
+          organizer_id?: string
+          prize_pool?: number | null
+          registration_deadline?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       gyms: {
         Row: {
           address: string
@@ -96,6 +197,7 @@ export type Database = {
           name: string
           profile_picture: string | null
           updated_at: string | null
+          verified: boolean | null
           weight: number | null
           workout_streak: number | null
         }
@@ -111,6 +213,7 @@ export type Database = {
           name: string
           profile_picture?: string | null
           updated_at?: string | null
+          verified?: boolean | null
           weight?: number | null
           workout_streak?: number | null
         }
@@ -126,6 +229,7 @@ export type Database = {
           name?: string
           profile_picture?: string | null
           updated_at?: string | null
+          verified?: boolean | null
           weight?: number | null
           workout_streak?: number | null
         }
