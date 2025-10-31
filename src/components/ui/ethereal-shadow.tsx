@@ -31,8 +31,6 @@ interface ShadowOverlayProps {
   noise?: NoiseConfig;
   style?: CSSProperties;
   className?: string;
-  showTitle?: boolean;
-  title?: string;
 }
 
 function mapRange(
@@ -56,15 +54,13 @@ const useInstanceId = (): string => {
   return instanceId;
 };
 
-export function EtherealShadow({
+export function Component({
   sizing = 'fill',
   color = 'rgba(128, 128, 128, 1)',
   animation,
   noise,
   style,
-  className,
-  showTitle = false,
-  title = "Ethereal Shadows"
+  className
 }: ShadowOverlayProps) {
   const id = useInstanceId();
   const animationEnabled = animation && animation.scale > 0;
@@ -173,22 +169,20 @@ export function EtherealShadow({
         />
       </div>
 
-      {showTitle && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-            zIndex: 10
-          }}
-        >
-          <h1 className="md:text-7xl text-6xl lg:text-8xl font-bold text-center text-foreground relative z-20">
-            {title}
-          </h1>
-        </div>
-      )}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          textAlign: "center",
+          zIndex: 10
+        }}
+      >
+        <h1 className="md:text-7xl text-6xl lg:text-8xl font-bold text-center text-foreground relative z-20">
+          Etheral Shadows
+        </h1>
+      </div>
 
       {noise && noise.opacity > 0 && (
         <div
