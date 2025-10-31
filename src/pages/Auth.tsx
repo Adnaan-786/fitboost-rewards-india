@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Dumbbell } from 'lucide-react';
+import { HeroGeometric } from '@/components/ui/shape-landing-hero';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -60,13 +61,23 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--gradient-primary)' }}>
-      <Card className="w-full max-w-md shadow-2xl">
+    <div className="relative min-h-screen flex items-center justify-center p-4">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0">
+        <HeroGeometric 
+          badge="V-DESI Fitness"
+          title1="Transform Your"
+          title2="Fitness Journey"
+        />
+      </div>
+      
+      {/* Auth Card */}
+      <Card className="relative z-10 w-full max-w-md shadow-2xl bg-card/95 backdrop-blur-sm border-2">
         <CardHeader className="text-center space-y-2">
           <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-2" style={{ background: 'var(--gradient-primary)' }}>
             <Dumbbell className="w-8 h-8 text-primary-foreground" />
           </div>
-          <CardTitle className="text-3xl font-bold">FitBoost</CardTitle>
+          <CardTitle className="text-3xl font-bold">V-DESI</CardTitle>
           <CardDescription>Your fitness journey starts here</CardDescription>
         </CardHeader>
         <CardContent>
