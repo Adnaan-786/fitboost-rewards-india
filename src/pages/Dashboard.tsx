@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SeedGymDataButton } from '@/components/admin/SeedGymDataButton';
 import { SeedMembershipButton } from '@/components/admin/SeedMembershipButton';
+import { SeedReelsButton } from '@/components/admin/SeedReelsButton';
 import { NeonButton } from '@/components/ui/neon-button';
 
 const Dashboard = () => {
@@ -442,9 +443,10 @@ const Dashboard = () => {
             <CardDescription>Development and testing utilities</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <SeedGymDataButton />
               <SeedMembershipButton />
+              <SeedReelsButton />
             </div>
           </CardContent>
         </Card>
