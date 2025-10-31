@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SeedGymDataButton } from '@/components/admin/SeedGymDataButton';
 import { SeedMembershipButton } from '@/components/admin/SeedMembershipButton';
+import { NeonButton } from '@/components/ui/neon-button';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -433,6 +434,25 @@ const Dashboard = () => {
 
         {/* Gradient Menu Navigation */}
         <GradientMenu />
+
+        {/* Apply Now Section */}
+        <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <h3 className="text-2xl font-bold">Join Our Platform</h3>
+              <p className="text-muted-foreground">Apply as a gym, trainer, sponsor, or explore our programs</p>
+              <div className="flex justify-center">
+                <NeonButton
+                  variant="solid"
+                  size="lg"
+                  onClick={() => navigate('/apply')}
+                >
+                  Apply Now
+                </NeonButton>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Admin Tools */}
         <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
