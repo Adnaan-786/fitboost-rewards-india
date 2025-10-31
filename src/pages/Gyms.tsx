@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, MapPin, Star } from 'lucide-react';
+import { ArrowLeft, MapPin, Star, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import GymMap from '@/components/GymMap';
 
@@ -72,11 +72,17 @@ const Gyms = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b sticky top-0 bg-background z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
-            <ArrowLeft className="w-5 h-5" />
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <h1 className="text-2xl font-bold">Find Gyms Near You</h1>
+          </div>
+          <Button variant="outline" onClick={() => navigate('/my-gym')}>
+            <CreditCard className="w-4 h-4 mr-2" />
+            My Membership
           </Button>
-          <h1 className="text-2xl font-bold">Find Gyms Near You</h1>
         </div>
       </header>
 

@@ -8,3 +8,6 @@ verify_jwt = true
 
 [functions.seed-gym-data]
 verify_jwt = true
+
+[functions.seed-membership-data]
+verify_jwt = true

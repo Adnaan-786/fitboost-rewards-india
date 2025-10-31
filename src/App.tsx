@@ -13,6 +13,7 @@ import Rewards from "./pages/Rewards";
 import Reels from "./pages/Reels";
 import Store from "./pages/Store";
 import Gyms from "./pages/Gyms";
+import MyGym from "./pages/MyGym";
 import Events from "./pages/Events";
 import SelfWorkout from "./pages/SelfWorkout";
 import WorkoutSession from "./pages/WorkoutSession";
@@ -68,6 +69,7 @@ const App = () => (
           <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
           <Route path="/store" element={<ProtectedRoute><Store /></ProtectedRoute>} />
           <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
+          <Route path="/my-gym" element={<ProtectedRoute><MyGym /></ProtectedRoute>} />
           <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
           <Route path="/self-workout" element={<ProtectedRoute><SelfWorkout /></ProtectedRoute>} />
           <Route path="/workout-session/:sessionId" element={<ProtectedRoute><WorkoutSession /></ProtectedRoute>} />

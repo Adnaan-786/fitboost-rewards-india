@@ -238,6 +238,152 @@ export type Database = {
         }
         Relationships: []
       }
+      gym_check_ins: {
+        Row: {
+          check_in_time: string
+          created_at: string | null
+          gym_id: string
+          id: string
+          membership_id: string
+          user_id: string
+        }
+        Insert: {
+          check_in_time?: string
+          created_at?: string | null
+          gym_id: string
+          id?: string
+          membership_id: string
+          user_id: string
+        }
+        Update: {
+          check_in_time?: string
+          created_at?: string | null
+          gym_id?: string
+          id?: string
+          membership_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gym_check_ins_gym_id_fkey"
+            columns: ["gym_id"]
+            isOneToOne: false
+            referencedRelation: "gyms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gym_check_ins_membership_id_fkey"
+            columns: ["membership_id"]
+            isOneToOne: false
+            referencedRelation: "gym_memberships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gym_memberships: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          gym_id: string
+          id: string
+          monthly_price: number
+          plan_type: string
+          qr_code: string
+          start_date: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          gym_id: string
+          id?: string
+          monthly_price: number
+          plan_type: string
+          qr_code: string
+          start_date: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          gym_id?: string
+          id?: string
+          monthly_price?: number
+          plan_type?: string
+          qr_code?: string
+          start_date?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gym_memberships_gym_id_fkey"
+            columns: ["gym_id"]
+            isOneToOne: false
+            referencedRelation: "gyms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gym_payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          gym_id: string
+          id: string
+          membership_id: string
+          payment_date: string
+          payment_method: string | null
+          status: string
+          transaction_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          gym_id: string
+          id?: string
+          membership_id: string
+          payment_date?: string
+          payment_method?: string | null
+          status?: string
+          transaction_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          gym_id?: string
+          id?: string
+          membership_id?: string
+          payment_date?: string
+          payment_method?: string | null
+          status?: string
+          transaction_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gym_payments_gym_id_fkey"
+            columns: ["gym_id"]
+            isOneToOne: false
+            referencedRelation: "gyms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gym_payments_membership_id_fkey"
+            columns: ["membership_id"]
+            isOneToOne: false
+            referencedRelation: "gym_memberships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gyms: {
         Row: {
           address: string

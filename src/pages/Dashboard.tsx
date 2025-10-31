@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SeedGymDataButton } from '@/components/admin/SeedGymDataButton';
+import { SeedMembershipButton } from '@/components/admin/SeedMembershipButton';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -440,7 +441,10 @@ const Dashboard = () => {
             <CardDescription>Development and testing utilities</CardDescription>
           </CardHeader>
           <CardContent>
-            <SeedGymDataButton />
+            <div className="flex gap-2">
+              <SeedGymDataButton />
+              <SeedMembershipButton />
+            </div>
           </CardContent>
         </Card>
 
