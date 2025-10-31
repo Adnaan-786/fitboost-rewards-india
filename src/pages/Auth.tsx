@@ -52,9 +52,14 @@ const Auth = () => {
       });
     } else {
       toast({
-        title: 'Success!',
-        description: 'Account created. Please check your email to verify.'
+        title: 'Verification Email Sent! 📧',
+        description: 'Please check your email and click the verification link to activate your account. Check spam folder if you don\'t see it.',
+        duration: 8000,
       });
+      // Clear form
+      setEmail('');
+      setPassword('');
+      setName('');
     }
     
     setLoading(false);
