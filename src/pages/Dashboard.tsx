@@ -20,6 +20,8 @@ const Dashboard = () => {
   const [timer, setTimer] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [aiTip, setAiTip] = useState('');
+  const [dietPlan, setDietPlan] = useState('');
+  const [loadingDietPlan, setLoadingDietPlan] = useState(false);
 
   const tips = [
     'Start your day with a glass of water to boost metabolism',
@@ -35,6 +37,12 @@ const Dashboard = () => {
       setAiTip(tips[Math.floor(Math.random() * tips.length)]);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (profile && profile.weight && profile.height) {
+      generateDietPlan();
+    }
+  }, [profile]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -60,6 +68,37 @@ const Dashboard = () => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const generateDietPlan = async () => {
+    if (!profile || !profile.weight || !profile.height) return;
+    
+    setLoadingDietPlan(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-diet-plan', {
+        body: {
+          weight: profile.weight,
+          height: profile.height,
+          age: profile.age || 25,
+          fitnessGoal: profile.fitness_goal || 'General Fitness'
+        }
+      });
+
+      if (error) throw error;
+      
+      if (data?.dietPlan) {
+        setDietPlan(data.dietPlan);
+      }
+    } catch (error) {
+      console.error('Error generating diet plan:', error);
+      toast({
+        title: 'Error',
+        description: 'Could not generate diet plan. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoadingDietPlan(false);
+    }
   };
 
   const saveWorkout = async () => {
@@ -229,6 +268,51 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <p className="text-lg">{aiTip}</p>
+          </CardContent>
+        </Card>
+
+        <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>🥗 Personalized AI Diet Plan</span>
+              {!loadingDietPlan && dietPlan && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={generateDietPlan}
+                >
+                  Regenerate
+                </Button>
+              )}
+            </CardTitle>
+            <CardDescription>
+              Based on your profile: {profile?.weight}kg, {profile?.height}cm, Goal: {profile?.fitness_goal || 'Not set'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingDietPlan ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <span className="ml-3 text-muted-foreground">Generating your personalized diet plan...</span>
+              </div>
+            ) : dietPlan ? (
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                <p className="whitespace-pre-line text-base leading-relaxed">{dietPlan}</p>
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-muted-foreground mb-4">
+                  {!profile?.weight || !profile?.height 
+                    ? 'Please complete your profile (weight, height, age) in settings to get a personalized diet plan.'
+                    : 'Click the button below to generate your diet plan.'}
+                </p>
+                {profile?.weight && profile?.height && (
+                  <Button onClick={generateDietPlan}>
+                    Generate Diet Plan
+                  </Button>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 

@@ -1,1 +1,4 @@
 project_id = "fglxrbmjteqircyweirf"
+
+[functions.generate-diet-plan]
+verify_jwt = true
