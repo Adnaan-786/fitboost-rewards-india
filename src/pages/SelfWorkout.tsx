@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import ExerciseLibrary from "@/components/workout/ExerciseLibrary";
 import WorkoutPlans from "@/components/workout/WorkoutPlans";
 import CustomWorkouts from "@/components/workout/CustomWorkouts";
+import SeedDataButton from "@/components/admin/SeedDataButton";
 
 const SelfWorkout = () => {
   const navigate = useNavigate();
@@ -14,19 +15,22 @@ const SelfWorkout = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/dashboard")}
-            className="icon-gradient"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">Self Workout</h1>
-            <p className="text-muted-foreground">Your personal fitness library</p>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/dashboard")}
+              className="icon-gradient"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold">Self Workout</h1>
+              <p className="text-muted-foreground">Your personal fitness library</p>
+            </div>
           </div>
+          <SeedDataButton />
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

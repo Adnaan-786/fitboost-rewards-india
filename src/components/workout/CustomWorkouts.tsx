@@ -100,7 +100,7 @@ const CustomWorkouts = () => {
           <h2 className="text-2xl font-bold">My Custom Workouts</h2>
           <p className="text-muted-foreground">Create and manage your personalized routines</p>
         </div>
-        <Button>
+        <Button onClick={() => navigate("/workout-builder")}>
           <Plus className="w-4 h-4 mr-2" />
           Create Workout
         </Button>
@@ -110,7 +110,7 @@ const CustomWorkouts = () => {
         <Card className="backdrop-blur-sm bg-card/80">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">You haven't created any custom workouts yet</p>
-            <Button className="mt-4">
+            <Button className="mt-4" onClick={() => navigate("/workout-builder")}>
               <Plus className="w-4 h-4 mr-2" />
               Create Your First Workout
             </Button>

@@ -15,6 +15,8 @@ import Store from "./pages/Store";
 import Gyms from "./pages/Gyms";
 import Events from "./pages/Events";
 import SelfWorkout from "./pages/SelfWorkout";
+import WorkoutSession from "./pages/WorkoutSession";
+import WorkoutBuilder from "./pages/WorkoutBuilder";
 import NotFound from "./pages/NotFound";
 
 
@@ -65,6 +67,8 @@ const App = () => (
           <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
           <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
           <Route path="/self-workout" element={<ProtectedRoute><SelfWorkout /></ProtectedRoute>} />
+          <Route path="/workout-session/:sessionId" element={<ProtectedRoute><WorkoutSession /></ProtectedRoute>} />
+          <Route path="/workout-builder" element={<ProtectedRoute><WorkoutBuilder /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
