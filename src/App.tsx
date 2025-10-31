@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Challenges from "./pages/Challenges";
 import Rewards from "./pages/Rewards";
 import Reels from "./pages/Reels";
+import Store from "./pages/Store";
 import Gyms from "./pages/Gyms";
 import Events from "./pages/Events";
 import NotFound from "./pages/NotFound";
@@ -58,10 +59,11 @@ const App = () => (
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
           <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
-            <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
-            <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
-            <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
+          <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
+          <Route path="/store" element={<ProtectedRoute><Store /></ProtectedRoute>} />
+          <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
+          <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
