@@ -289,7 +289,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
+          <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Steps Today</CardTitle>
             </CardHeader>
@@ -300,7 +300,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <Flame className="w-4 h-4 icon-gradient" />
@@ -314,7 +314,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <Droplet className="w-4 h-4 icon-gradient" />
@@ -330,7 +330,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
+          <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Workout Streak 🔥</CardTitle>
               <CardDescription>Keep it going!</CardDescription>
@@ -343,7 +343,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Quick Workout Timer</CardTitle>
               <CardDescription>Track your workout session</CardDescription>
