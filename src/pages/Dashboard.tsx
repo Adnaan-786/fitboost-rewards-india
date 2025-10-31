@@ -5,11 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import { Coins, Dumbbell, Flame, Droplet, Play, Pause, RotateCcw, LogOut } from 'lucide-react';
+import { Coins, Dumbbell, Flame, Droplet, Play, Pause, RotateCcw, LogOut, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BackgroundGradientAnimation } from '@/components/ui/background-gradient-animation';
 import GradientMenu from '@/components/ui/gradient-menu';
 import ReelsSection from '@/components/ReelsSection';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -22,6 +25,14 @@ const Dashboard = () => {
   const [aiTip, setAiTip] = useState('');
   const [dietPlan, setDietPlan] = useState('');
   const [loadingDietPlan, setLoadingDietPlan] = useState(false);
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    name: '',
+    weight: '',
+    height: '',
+    age: '',
+    fitness_goal: ''
+  });
 
   const tips = [
     'Start your day with a glass of water to boost metabolism',
@@ -61,7 +72,44 @@ const Dashboard = () => {
       .eq('id', user?.id)
       .single();
     
-    if (data) setProfile(data);
+    if (data) {
+      setProfile(data);
+      setProfileForm({
+        name: data.name || '',
+        weight: data.weight?.toString() || '',
+        height: data.height?.toString() || '',
+        age: data.age?.toString() || '',
+        fitness_goal: data.fitness_goal || ''
+      });
+    }
+  };
+
+  const updateProfile = async () => {
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        name: profileForm.name,
+        weight: profileForm.weight ? parseFloat(profileForm.weight) : null,
+        height: profileForm.height ? parseFloat(profileForm.height) : null,
+        age: profileForm.age ? parseInt(profileForm.age) : null,
+        fitness_goal: profileForm.fitness_goal
+      })
+      .eq('id', user?.id);
+
+    if (!error) {
+      toast({
+        title: 'Profile updated!',
+        description: 'Your profile has been updated successfully.'
+      });
+      setProfileDialogOpen(false);
+      fetchProfile();
+    } else {
+      toast({
+        title: 'Error',
+        description: 'Could not update profile. Please try again.',
+        variant: 'destructive'
+      });
+    }
   };
 
   const formatTime = (seconds: number) => {
@@ -162,6 +210,71 @@ const Dashboard = () => {
               <Coins className="w-5 h-5 text-primary opacity-50" />
               <span className="font-bold">{profile?.fitcoin_balance || 0}</span>
             </div>
+            <Dialog open={profileDialogOpen} onOpenChange={setProfileDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <User className="w-5 h-5 opacity-50" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Edit Profile</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      value={profileForm.name}
+                      onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="weight">Weight (kg)</Label>
+                    <Input
+                      id="weight"
+                      type="number"
+                      value={profileForm.weight}
+                      onChange={(e) => setProfileForm({ ...profileForm, weight: e.target.value })}
+                      placeholder="70"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="height">Height (cm)</Label>
+                    <Input
+                      id="height"
+                      type="number"
+                      value={profileForm.height}
+                      onChange={(e) => setProfileForm({ ...profileForm, height: e.target.value })}
+                      placeholder="175"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="age">Age</Label>
+                    <Input
+                      id="age"
+                      type="number"
+                      value={profileForm.age}
+                      onChange={(e) => setProfileForm({ ...profileForm, age: e.target.value })}
+                      placeholder="25"
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="fitness_goal">Fitness Goal</Label>
+                    <Input
+                      id="fitness_goal"
+                      value={profileForm.fitness_goal}
+                      onChange={(e) => setProfileForm({ ...profileForm, fitness_goal: e.target.value })}
+                      placeholder="Weight Loss, Muscle Gain, etc."
+                    />
+                  </div>
+                </div>
+                <Button onClick={updateProfile} className="w-full">
+                  Save Changes
+                </Button>
+              </DialogContent>
+            </Dialog>
             <Button variant="ghost" size="icon" onClick={signOut}>
               <LogOut className="w-5 h-5 opacity-50" />
             </Button>
