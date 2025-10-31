@@ -436,6 +436,63 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_workouts: {
+        Row: {
+          completed: boolean | null
+          created_at: string | null
+          id: string
+          notes: string | null
+          reminder_enabled: boolean | null
+          reminder_minutes_before: number | null
+          scheduled_date: string
+          scheduled_time: string | null
+          user_id: string
+          user_workout_id: string | null
+          workout_plan_id: string | null
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          reminder_enabled?: boolean | null
+          reminder_minutes_before?: number | null
+          scheduled_date: string
+          scheduled_time?: string | null
+          user_id: string
+          user_workout_id?: string | null
+          workout_plan_id?: string | null
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          reminder_enabled?: boolean | null
+          reminder_minutes_before?: number | null
+          scheduled_date?: string
+          scheduled_time?: string | null
+          user_id?: string
+          user_workout_id?: string | null
+          workout_plan_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_workouts_user_workout_id_fkey"
+            columns: ["user_workout_id"]
+            isOneToOne: false
+            referencedRelation: "user_custom_workouts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_workouts_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       social_reels: {
         Row: {
           caption: string | null
@@ -710,6 +767,41 @@ export type Database = {
         }
         Relationships: []
       }
+      workout_reminders: {
+        Row: {
+          created_at: string | null
+          id: string
+          reminder_time: string
+          scheduled_workout_id: string | null
+          sent: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          reminder_time: string
+          scheduled_workout_id?: string | null
+          sent?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          reminder_time?: string
+          scheduled_workout_id?: string | null
+          sent?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_reminders_scheduled_workout_id_fkey"
+            columns: ["scheduled_workout_id"]
+            isOneToOne: false
+            referencedRelation: "scheduled_workouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workout_sessions: {
         Row: {
           completed_at: string | null
@@ -796,6 +888,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_workout_streak: { Args: { p_user_id: string }; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

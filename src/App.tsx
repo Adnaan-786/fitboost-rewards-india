@@ -17,6 +17,7 @@ import Events from "./pages/Events";
 import SelfWorkout from "./pages/SelfWorkout";
 import WorkoutSession from "./pages/WorkoutSession";
 import WorkoutBuilder from "./pages/WorkoutBuilder";
+import WorkoutDay from "./pages/WorkoutDay";
 import NotFound from "./pages/NotFound";
 
 
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/self-workout" element={<ProtectedRoute><SelfWorkout /></ProtectedRoute>} />
           <Route path="/workout-session/:sessionId" element={<ProtectedRoute><WorkoutSession /></ProtectedRoute>} />
           <Route path="/workout-builder" element={<ProtectedRoute><WorkoutBuilder /></ProtectedRoute>} />
+          <Route path="/workout-day" element={<ProtectedRoute><WorkoutDay /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
