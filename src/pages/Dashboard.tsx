@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Coins, Dumbbell, Flame, Droplet, Play, Pause, RotateCcw, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BackgroundGradientAnimation } from '@/components/ui/background-gradient-animation';
+import GradientMenu from '@/components/ui/gradient-menu';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -221,7 +222,7 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        <Card style={{ background: 'var(--gradient-card)' }}>
+        <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
           <CardHeader>
             <CardTitle>💡 AI Coach Tip of the Day</CardTitle>
           </CardHeader>
@@ -230,32 +231,8 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Button onClick={() => navigate('/challenges')} className="h-24" variant="outline">
-            <div className="text-center">
-              <div className="text-2xl mb-1">🏆</div>
-              <div className="text-sm font-medium">Challenges</div>
-            </div>
-          </Button>
-          <Button onClick={() => navigate('/events')} className="h-24" variant="outline">
-            <div className="text-center">
-              <div className="text-2xl mb-1">📅</div>
-              <div className="text-sm font-medium">Events</div>
-            </div>
-          </Button>
-          <Button onClick={() => navigate('/rewards')} className="h-24" variant="outline">
-            <div className="text-center">
-              <div className="text-2xl mb-1">🎁</div>
-              <div className="text-sm font-medium">Rewards</div>
-            </div>
-          </Button>
-          <Button onClick={() => navigate('/gyms')} className="h-24" variant="outline">
-            <div className="text-center">
-              <div className="text-2xl mb-1">🏋️</div>
-              <div className="text-sm font-medium">Find Gyms</div>
-            </div>
-          </Button>
-        </div>
+        {/* Gradient Menu Navigation */}
+        <GradientMenu />
       </main>
     </div>
   );
