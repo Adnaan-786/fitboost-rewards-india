@@ -435,6 +435,23 @@ const Dashboard = () => {
         {/* Gradient Menu Navigation */}
         <GradientMenu />
 
+        {/* Admin Tools */}
+        <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
+          <CardHeader>
+            <CardTitle>🔧 Admin Tools</CardTitle>
+            <CardDescription>Development and testing utilities</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2">
+              <SeedGymDataButton />
+              <SeedMembershipButton />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Reels Section */}
+        <ReelsSection />
+
         {/* Apply Now Section */}
         <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
           <CardContent className="pt-6">
@@ -453,23 +470,6 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Admin Tools */}
-        <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
-          <CardHeader>
-            <CardTitle>🔧 Admin Tools</CardTitle>
-            <CardDescription>Development and testing utilities</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-2">
-              <SeedGymDataButton />
-              <SeedMembershipButton />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Reels Section */}
-        <ReelsSection />
       </main>
     </div>
   );
