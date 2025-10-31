@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { Coins, Dumbbell, Flame, Droplet, Play, Pause, RotateCcw, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { EtherealShadow } from '@/components/ui/ethereal-shadow';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -94,8 +95,18 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Ethereal Shadow Background */}
+      <div className="fixed inset-0 z-0 opacity-30">
+        <EtherealShadow
+          color="hsl(var(--primary))"
+          animation={{ scale: 80, speed: 70 }}
+          noise={{ opacity: 0.8, scale: 1 }}
+          sizing="fill"
+        />
+      </div>
+
+      <header className="border-b relative z-10 bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Dumbbell className="w-6 h-6 text-primary" />
@@ -113,7 +124,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 space-y-6">
+      <main className="container mx-auto px-4 py-8 space-y-6 relative z-10">
         <div>
           <h2 className="text-3xl font-bold">Hello, {profile?.name || 'there'}! 👋</h2>
           <p className="text-muted-foreground mt-1">Ready to crush your fitness goals today?</p>
