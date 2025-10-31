@@ -13,6 +13,7 @@ import ReelsSection from '@/components/ReelsSection';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SeedGymDataButton } from '@/components/admin/SeedGymDataButton';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -431,6 +432,17 @@ const Dashboard = () => {
 
         {/* Gradient Menu Navigation */}
         <GradientMenu />
+
+        {/* Admin Tools */}
+        <Card style={{ background: 'var(--gradient-card)' }} className="backdrop-blur-sm bg-card/80">
+          <CardHeader>
+            <CardTitle>🔧 Admin Tools</CardTitle>
+            <CardDescription>Development and testing utilities</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <SeedGymDataButton />
+          </CardContent>
+        </Card>
 
         {/* Reels Section */}
         <ReelsSection />

@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.seed-workout-data]
 verify_jwt = true
+
+[functions.seed-gym-data]
+verify_jwt = true
