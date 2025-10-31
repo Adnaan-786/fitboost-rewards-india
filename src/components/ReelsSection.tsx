@@ -72,15 +72,32 @@ const ReelsSection = () => {
               }}
             >
               <div className="aspect-[9/16] relative">
-                <div 
-                  className="absolute inset-0 backdrop-blur-xl opacity-30"
-                  style={{
-                    background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`
-                  }}
-                />
-                <div className="relative z-10 h-full flex flex-col items-center justify-center p-4 text-white">
-                  <Video className="w-12 h-12 mb-3 opacity-80" />
-                  <div className="mt-auto w-full space-y-2">
+                {reel.video_url ? (
+                  <>
+                    <video
+                      src={reel.video_url}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loop
+                      muted
+                      playsInline
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                  </>
+                ) : (
+                  <>
+                    <div 
+                      className="absolute inset-0 backdrop-blur-xl opacity-30"
+                      style={{
+                        background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`
+                      }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Video className="w-12 h-12 text-white/60" />
+                    </div>
+                  </>
+                )}
+                <div className="relative z-10 h-full flex flex-col justify-end p-4 text-white">
+                  <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Avatar className="w-8 h-8 border-2 border-white/30">
                         <AvatarFallback className="text-xs bg-white/20 text-white">

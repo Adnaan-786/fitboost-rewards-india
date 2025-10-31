@@ -287,7 +287,7 @@ const Dashboard = () => {
 
       <main className="container mx-auto px-4 py-8 space-y-6 relative z-10">
         <div>
-          <h2 className="text-3xl font-bold">Hello, {profile?.name || 'there'}! 👋</h2>
+          <h2 className="text-3xl font-bold text-white">Hello, {profile?.name || 'there'}! 👋</h2>
           <p className="text-muted-foreground mt-1">Ready to crush your fitness goals today?</p>
         </div>
 
