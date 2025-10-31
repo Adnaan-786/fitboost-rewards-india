@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { Coins, Dumbbell, Flame, Droplet, Play, Pause, RotateCcw, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Component as EtherealShadow } from '@/components/ui/ethereal-shadow';
+import { BackgroundGradientAnimation } from '@/components/ui/background-gradient-animation';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -95,30 +95,34 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Ethereal Shadow Background */}
-      <div className="fixed inset-0 z-0 opacity-100">
-        <EtherealShadow
-          color="rgba(128, 128, 128, 0.5)"
-          animation={{ scale: 100, speed: 90 }}
-          noise={{ opacity: 1, scale: 1.2 }}
-          sizing="fill"
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background Gradient Animation */}
+      <div className="fixed inset-0 z-0">
+        <BackgroundGradientAnimation
+          gradientBackgroundStart="rgb(108, 0, 162)"
+          gradientBackgroundEnd="rgb(0, 17, 82)"
+          firstColor="18, 113, 255"
+          secondColor="221, 74, 255"
+          thirdColor="100, 220, 255"
+          fourthColor="200, 50, 50"
+          fifthColor="180, 180, 50"
+          interactive={true}
         />
       </div>
 
-      <header className="border-b relative z-10 bg-background/80 backdrop-blur-sm">
+      <header className="border-b relative z-10 bg-background/30 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Dumbbell className="w-6 h-6 text-primary" />
+            <Dumbbell className="w-6 h-6 text-primary opacity-50" />
             <h1 className="text-2xl font-bold">FitBoost</h1>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10">
-              <Coins className="w-5 h-5 text-primary" />
+              <Coins className="w-5 h-5 text-primary opacity-50" />
               <span className="font-bold">{profile?.fitcoin_balance || 0}</span>
             </div>
             <Button variant="ghost" size="icon" onClick={signOut}>
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-5 h-5 opacity-50" />
             </Button>
           </div>
         </div>
@@ -145,7 +149,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Flame className="w-4 h-4 text-primary" />
+                <Flame className="w-4 h-4 text-primary opacity-50" />
                 Calories Burned
               </CardTitle>
             </CardHeader>
@@ -159,7 +163,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Droplet className="w-4 h-4 text-accent" />
+                <Droplet className="w-4 h-4 text-accent opacity-50" />
                 Water Intake
               </CardTitle>
             </CardHeader>
@@ -198,14 +202,14 @@ const Dashboard = () => {
                   className="flex-1"
                   variant={isRunning ? "secondary" : "default"}
                 >
-                  {isRunning ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                  {isRunning ? <Pause className="w-4 h-4 mr-2 opacity-50" /> : <Play className="w-4 h-4 mr-2 opacity-50" />}
                   {isRunning ? 'Pause' : 'Start'}
                 </Button>
                 <Button 
                   onClick={() => { setTimer(0); setIsRunning(false); }}
                   variant="outline"
                 >
-                  <RotateCcw className="w-4 h-4" />
+                  <RotateCcw className="w-4 h-4 opacity-50" />
                 </Button>
               </div>
               {timer > 0 && !isRunning && (
