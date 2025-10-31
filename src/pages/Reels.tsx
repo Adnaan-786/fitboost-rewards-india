@@ -2,17 +2,27 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Heart, Video } from 'lucide-react';
+import { ArrowLeft, Heart, MessageCircle, Send, Bookmark } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
+interface Reel {
+  id: string;
+  video_url: string;
+  caption: string;
+  likes: number;
+  profiles: {
+    name: string;
+  };
+}
 
 const Reels = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [reels, setReels] = useState<any[]>([]);
+  const [reels, setReels] = useState<Reel[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (user) {
@@ -40,70 +50,123 @@ const Reels = () => {
 
     if (!error) {
       fetchReels();
+      toast({
+        title: "Liked!",
+        description: "Keep the motivation going! 💪",
+      });
     }
   };
 
+  const handleScroll = (e: React.WheelEvent) => {
+    if (e.deltaY > 0 && currentIndex < reels.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else if (e.deltaY < 0 && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const currentReel = reels[currentIndex];
+
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
+    <div className="fixed inset-0 bg-black overflow-hidden" onWheel={handleScroll}>
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/60 to-transparent">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-2xl font-bold">Social Reels</h1>
-          </div>
-          <Button>
-            <Video className="w-4 h-4 mr-2" />
-            Upload
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate('/dashboard')}
+            className="text-white hover:bg-white/20"
+          >
+            <ArrowLeft className="w-5 h-5" />
           </Button>
+          <h1 className="text-xl font-bold text-white">Reels</h1>
+          <div className="w-10" /> {/* Spacer for centering */}
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        {reels.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <Video className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No reels yet</h3>
-              <p className="text-muted-foreground mb-4">Be the first to share your fitness journey!</p>
-              <Button>Upload Your First Reel</Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-6 max-w-2xl mx-auto">
-            {reels.map((reel) => (
-              <Card key={reel.id} className="overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="aspect-[9/16] bg-muted flex items-center justify-center">
-                    <Video className="w-16 h-16 text-muted-foreground" />
-                  </div>
-                  <div className="p-4 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarFallback>{reel.profiles?.name?.[0] || 'U'}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <p className="font-semibold">{reel.profiles?.name || 'User'}</p>
-                        <p className="text-sm text-muted-foreground">{reel.caption}</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => likeReel(reel.id, reel.likes)}
-                      className="gap-2"
-                    >
-                      <Heart className="w-4 h-4" />
-                      {reel.likes} Likes
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+      {reels.length === 0 ? (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center text-white">
+            <h3 className="text-2xl font-bold mb-2">No reels yet</h3>
+            <p className="text-white/70">Be the first to share your fitness journey!</p>
+          </div>
+        </div>
+      ) : (
+        <div className="relative h-full w-full flex items-center justify-center">
+          {/* Main Reel Content */}
+          <div className="relative w-full max-w-md h-full">
+            {/* Background Image/Video */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${currentReel?.video_url})` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+            </div>
+
+            {/* Content Overlay */}
+            <div className="relative h-full flex flex-col justify-end p-6 pb-24">
+              {/* User Info */}
+              <div className="flex items-center gap-3 mb-4">
+                <Avatar className="border-2 border-white">
+                  <AvatarFallback className="bg-primary text-white">
+                    {currentReel?.profiles?.name?.[0] || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-bold text-white text-lg">{currentReel?.profiles?.name || 'User'}</p>
+                  <p className="text-sm text-white/90">{currentReel?.caption}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons - Right Side */}
+            <div className="absolute right-4 bottom-32 flex flex-col gap-6">
+              <button 
+                onClick={() => likeReel(currentReel.id, currentReel.likes)}
+                className="flex flex-col items-center gap-1 transition-transform hover:scale-110"
+              >
+                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <Heart className="w-6 h-6 text-white fill-white" />
+                </div>
+                <span className="text-white text-sm font-semibold">{currentReel?.likes}</span>
+              </button>
+
+              <button className="flex flex-col items-center gap-1 transition-transform hover:scale-110">
+                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-white text-sm font-semibold">12</span>
+              </button>
+
+              <button className="flex flex-col items-center gap-1 transition-transform hover:scale-110">
+                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <Send className="w-6 h-6 text-white" />
+                </div>
+              </button>
+
+              <button className="flex flex-col items-center gap-1 transition-transform hover:scale-110">
+                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <Bookmark className="w-6 h-6 text-white" />
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Navigation Dots */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {reels.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  idx === currentIndex ? 'bg-white w-6' : 'bg-white/50'
+                }`}
+              />
             ))}
           </div>
-        )}
-      </main>
+        </div>
+      )}
     </div>
   );
 };
