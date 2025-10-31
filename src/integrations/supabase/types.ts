@@ -528,6 +528,237 @@ export type Database = {
           },
         ]
       }
+      trainer_bookings: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          duration_minutes: number
+          id: string
+          notes: string | null
+          payment_status: string | null
+          session_date: string
+          session_time: string
+          session_type: string
+          status: string | null
+          total_price: number
+          trainer_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          duration_minutes: number
+          id?: string
+          notes?: string | null
+          payment_status?: string | null
+          session_date: string
+          session_time: string
+          session_type: string
+          status?: string | null
+          total_price: number
+          trainer_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          duration_minutes?: number
+          id?: string
+          notes?: string | null
+          payment_status?: string | null
+          session_date?: string
+          session_time?: string
+          session_type?: string
+          status?: string | null
+          total_price?: number
+          trainer_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainer_bookings_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "trainer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trainer_conversations: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          id: string
+          last_message_at: string | null
+          trainer_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          trainer_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          trainer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainer_conversations_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "trainer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trainer_messages: {
+        Row: {
+          conversation_id: string
+          created_at: string | null
+          id: string
+          message_text: string
+          read: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string | null
+          id?: string
+          message_text: string
+          read?: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string | null
+          id?: string
+          message_text?: string
+          read?: boolean | null
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      trainer_profiles: {
+        Row: {
+          availability_days: string[] | null
+          bio: string | null
+          business_name: string
+          certifications: string[] | null
+          cover_image_url: string | null
+          created_at: string | null
+          hourly_rate: number | null
+          id: string
+          latitude: number | null
+          location_address: string | null
+          location_city: string | null
+          location_postal_code: string | null
+          location_state: string | null
+          longitude: number | null
+          profile_image_url: string | null
+          rating: number | null
+          services_offered: string[] | null
+          specialties: string[] | null
+          total_reviews: number | null
+          updated_at: string | null
+          user_id: string | null
+          verified: boolean | null
+          years_experience: number | null
+        }
+        Insert: {
+          availability_days?: string[] | null
+          bio?: string | null
+          business_name: string
+          certifications?: string[] | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          hourly_rate?: number | null
+          id?: string
+          latitude?: number | null
+          location_address?: string | null
+          location_city?: string | null
+          location_postal_code?: string | null
+          location_state?: string | null
+          longitude?: number | null
+          profile_image_url?: string | null
+          rating?: number | null
+          services_offered?: string[] | null
+          specialties?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          years_experience?: number | null
+        }
+        Update: {
+          availability_days?: string[] | null
+          bio?: string | null
+          business_name?: string
+          certifications?: string[] | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          hourly_rate?: number | null
+          id?: string
+          latitude?: number | null
+          location_address?: string | null
+          location_city?: string | null
+          location_postal_code?: string | null
+          location_state?: string | null
+          longitude?: number | null
+          profile_image_url?: string | null
+          rating?: number | null
+          services_offered?: string[] | null
+          specialties?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      trainer_reviews: {
+        Row: {
+          created_at: string | null
+          id: string
+          rating: number
+          review_text: string | null
+          trainer_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          rating: number
+          review_text?: string | null
+          trainer_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          rating?: number
+          review_text?: string | null
+          trainer_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainer_reviews_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "trainer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_activity_log: {
         Row: {
           activity_type: string

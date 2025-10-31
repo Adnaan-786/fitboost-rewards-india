@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, Calendar, Gift, Dumbbell, Video, ShoppingBag, CalendarDays } from 'lucide-react';
+import { Trophy, Calendar, Gift, Dumbbell, Video, ShoppingBag, CalendarDays, Users } from 'lucide-react';
 
 interface MenuItem {
   title: string;
@@ -24,6 +24,13 @@ const menuItems: MenuItem[] = [
     gradientFrom: '#6366F1', 
     gradientTo: '#8B5CF6',
     path: '/workout-day'
+  },
+  { 
+    title: 'Trainers', 
+    icon: <Users />, 
+    gradientFrom: '#10B981', 
+    gradientTo: '#14B8A6',
+    path: '/trainers'
   },
   { 
     title: 'Challenges', 
