@@ -62,23 +62,21 @@ const Auth = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4">
-      {/* Animated Background */}
+      {/* Animated Background - Shapes Only */}
       <div className="absolute inset-0 z-0">
-        <HeroGeometric 
-          badge="V-DESI Fitness"
-          title1="Transform Your"
-          title2="Fitness Journey"
-        />
+        <HeroGeometric showContent={false} />
       </div>
       
-      {/* Auth Card */}
-      <Card className="relative z-10 w-full max-w-md shadow-2xl bg-card/95 backdrop-blur-sm border-2">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-2" style={{ background: 'var(--gradient-primary)' }}>
-            <Dumbbell className="w-8 h-8 text-primary-foreground" />
+      {/* Auth Card - Main Focus */}
+      <Card className="relative z-10 w-full max-w-lg shadow-[0_20px_80px_rgba(0,0,0,0.5)] bg-card/98 backdrop-blur-md border-2 border-white/10">
+        <CardHeader className="text-center space-y-3 pb-6">
+          <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-3" style={{ background: 'var(--gradient-primary)' }}>
+            <Dumbbell className="w-10 h-10 text-primary-foreground" />
           </div>
-          <CardTitle className="text-3xl font-bold">V-DESI</CardTitle>
-          <CardDescription>Your fitness journey starts here</CardDescription>
+          <CardTitle className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+            V-DESI
+          </CardTitle>
+          <CardDescription className="text-base">Your fitness journey starts here</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
