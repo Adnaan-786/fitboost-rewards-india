@@ -14,6 +14,7 @@ import Reels from "./pages/Reels";
 import Store from "./pages/Store";
 import Gyms from "./pages/Gyms";
 import Events from "./pages/Events";
+import SelfWorkout from "./pages/SelfWorkout";
 import NotFound from "./pages/NotFound";
 
 
@@ -63,6 +64,7 @@ const App = () => (
           <Route path="/store" element={<ProtectedRoute><Store /></ProtectedRoute>} />
           <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
           <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+          <Route path="/self-workout" element={<ProtectedRoute><SelfWorkout /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>

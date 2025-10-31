@@ -12,6 +12,13 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { 
+    title: 'Self Workout', 
+    icon: <Dumbbell />, 
+    gradientFrom: '#FF6B6B', 
+    gradientTo: '#FF5E62',
+    path: '/self-workout'
+  },
+  { 
     title: 'Challenges', 
     icon: <Trophy />, 
     gradientFrom: '#a955ff', 

@@ -1,0 +1,221 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Dumbbell, Search, Play } from "lucide-react";
+import { toast } from "sonner";
+
+interface Exercise {
+  id: string;
+  name: string;
+  description: string;
+  muscle_group: string;
+  equipment: string;
+  type: string;
+  instructions: string;
+  image_url: string | null;
+  calories_per_minute: number;
+}
+
+const ExerciseLibrary = () => {
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [muscleFilter, setMuscleFilter] = useState("all");
+  const [equipmentFilter, setEquipmentFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+
+  useEffect(() => {
+    fetchExercises();
+  }, []);
+
+  useEffect(() => {
+    filterExercises();
+  }, [exercises, searchQuery, muscleFilter, equipmentFilter, typeFilter]);
+
+  const fetchExercises = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("exercises")
+        .select("*")
+        .order("name");
+
+      if (error) throw error;
+      setExercises(data || []);
+    } catch (error) {
+      console.error("Error fetching exercises:", error);
+      toast.error("Failed to load exercises");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterExercises = () => {
+    let filtered = exercises;
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (ex) =>
+          ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          ex.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (muscleFilter !== "all") {
+      filtered = filtered.filter((ex) => ex.muscle_group === muscleFilter);
+    }
+
+    if (equipmentFilter !== "all") {
+      filtered = filtered.filter((ex) => ex.equipment === equipmentFilter);
+    }
+
+    if (typeFilter !== "all") {
+      filtered = filtered.filter((ex) => ex.type === typeFilter);
+    }
+
+    setFilteredExercises(filtered);
+  };
+
+  const getMuscleGroupColor = (group: string) => {
+    const colors: Record<string, string> = {
+      chest: "bg-red-500/20 text-red-500",
+      back: "bg-blue-500/20 text-blue-500",
+      legs: "bg-green-500/20 text-green-500",
+      shoulders: "bg-yellow-500/20 text-yellow-500",
+      arms: "bg-purple-500/20 text-purple-500",
+      core: "bg-orange-500/20 text-orange-500",
+      full_body: "bg-pink-500/20 text-pink-500",
+      cardio: "bg-cyan-500/20 text-cyan-500",
+    };
+    return colors[group] || "bg-gray-500/20 text-gray-500";
+  };
+
+  if (loading) {
+    return <div className="text-center py-12">Loading exercises...</div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Filters */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search exercises..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        <Select value={muscleFilter} onValueChange={setMuscleFilter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Muscle Group" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Muscles</SelectItem>
+            <SelectItem value="chest">Chest</SelectItem>
+            <SelectItem value="back">Back</SelectItem>
+            <SelectItem value="legs">Legs</SelectItem>
+            <SelectItem value="shoulders">Shoulders</SelectItem>
+            <SelectItem value="arms">Arms</SelectItem>
+            <SelectItem value="core">Core</SelectItem>
+            <SelectItem value="full_body">Full Body</SelectItem>
+            <SelectItem value="cardio">Cardio</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={equipmentFilter} onValueChange={setEquipmentFilter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Equipment" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Equipment</SelectItem>
+            <SelectItem value="bodyweight">Bodyweight</SelectItem>
+            <SelectItem value="dumbbells">Dumbbells</SelectItem>
+            <SelectItem value="barbell">Barbell</SelectItem>
+            <SelectItem value="machine">Machine</SelectItem>
+            <SelectItem value="resistance_bands">Resistance Bands</SelectItem>
+            <SelectItem value="kettlebell">Kettlebell</SelectItem>
+            <SelectItem value="treadmill">Treadmill</SelectItem>
+            <SelectItem value="bike">Bike</SelectItem>
+            <SelectItem value="other">Other</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="cardio">Cardio</SelectItem>
+            <SelectItem value="strength">Strength</SelectItem>
+            <SelectItem value="flexibility">Flexibility</SelectItem>
+            <SelectItem value="sports">Sports</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Exercise Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredExercises.length === 0 ? (
+          <div className="col-span-full text-center py-12 text-muted-foreground">
+            No exercises found matching your filters
+          </div>
+        ) : (
+          filteredExercises.map((exercise) => (
+            <Card key={exercise.id} className="backdrop-blur-sm bg-card/80 hover:bg-card/90 transition-all">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <Dumbbell className="w-8 h-8 icon-gradient" />
+                  <Badge className={getMuscleGroupColor(exercise.muscle_group)}>
+                    {exercise.muscle_group.replace("_", " ")}
+                  </Badge>
+                </div>
+                <CardTitle className="mt-2">{exercise.name}</CardTitle>
+                <CardDescription>{exercise.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline">
+                      {exercise.equipment.replace("_", " ")}
+                    </Badge>
+                    <Badge variant="outline">
+                      {exercise.type}
+                    </Badge>
+                    <Badge variant="outline">
+                      {exercise.calories_per_minute} cal/min
+                    </Badge>
+                  </div>
+                  {exercise.instructions && (
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {exercise.instructions}
+                    </p>
+                  )}
+                  <Button className="w-full" variant="secondary">
+                    <Play className="w-4 h-4 mr-2" />
+                    View Details
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {filteredExercises.length > 0 && (
+        <div className="text-center text-sm text-muted-foreground">
+          Showing {filteredExercises.length} of {exercises.length} exercises
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ExerciseLibrary;
