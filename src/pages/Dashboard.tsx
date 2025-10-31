@@ -202,18 +202,18 @@ const Dashboard = () => {
       <header className="border-b relative z-10 bg-background/30 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Dumbbell className="w-6 h-6 text-primary opacity-50" />
+            <Dumbbell className="w-6 h-6 icon-gradient" />
             <h1 className="text-2xl font-bold">FitBoost</h1>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10">
-              <Coins className="w-5 h-5 text-primary opacity-50" />
-              <span className="font-bold">{profile?.fitcoin_balance || 0}</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full badge-gradient">
+              <Coins className="w-5 h-5 text-white" />
+              <span className="font-bold text-white">{profile?.fitcoin_balance || 0}</span>
             </div>
             <Dialog open={profileDialogOpen} onOpenChange={setProfileDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <User className="w-5 h-5 opacity-50" />
+                  <User className="w-5 h-5 icon-gradient" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -276,7 +276,7 @@ const Dashboard = () => {
               </DialogContent>
             </Dialog>
             <Button variant="ghost" size="icon" onClick={signOut}>
-              <LogOut className="w-5 h-5 opacity-50" />
+              <LogOut className="w-5 h-5 icon-gradient" />
             </Button>
           </div>
         </div>
@@ -303,7 +303,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Flame className="w-4 h-4 text-primary opacity-50" />
+                <Flame className="w-4 h-4 icon-gradient" />
                 Calories Burned
               </CardTitle>
             </CardHeader>
@@ -317,7 +317,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Droplet className="w-4 h-4 text-accent opacity-50" />
+                <Droplet className="w-4 h-4 icon-gradient" />
                 Water Intake
               </CardTitle>
             </CardHeader>
@@ -356,14 +356,14 @@ const Dashboard = () => {
                   className="flex-1"
                   variant={isRunning ? "secondary" : "default"}
                 >
-                  {isRunning ? <Pause className="w-4 h-4 mr-2 opacity-50" /> : <Play className="w-4 h-4 mr-2 opacity-50" />}
+                  {isRunning ? <Pause className="w-4 h-4 mr-2 icon-gradient" /> : <Play className="w-4 h-4 mr-2 icon-gradient" />}
                   {isRunning ? 'Pause' : 'Start'}
                 </Button>
                 <Button 
                   onClick={() => { setTimer(0); setIsRunning(false); }}
                   variant="outline"
                 >
-                  <RotateCcw className="w-4 h-4 opacity-50" />
+                  <RotateCcw className="w-4 h-4 icon-gradient" />
                 </Button>
               </div>
               {timer > 0 && !isRunning && (
