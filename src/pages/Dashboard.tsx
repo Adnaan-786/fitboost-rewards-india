@@ -9,6 +9,7 @@ import { Coins, Dumbbell, Flame, Droplet, Play, Pause, RotateCcw, LogOut } from 
 import { useNavigate } from 'react-router-dom';
 import { BackgroundGradientAnimation } from '@/components/ui/background-gradient-animation';
 import GradientMenu from '@/components/ui/gradient-menu';
+import ReelsSection from '@/components/ReelsSection';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -233,6 +234,9 @@ const Dashboard = () => {
 
         {/* Gradient Menu Navigation */}
         <GradientMenu />
+
+        {/* Reels Section */}
+        <ReelsSection />
       </main>
     </div>
   );
