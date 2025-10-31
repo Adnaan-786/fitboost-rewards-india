@@ -97,7 +97,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Ethereal Shadow Background */}
-      <div className="fixed inset-0 z-0 opacity-20">
+      <div className="fixed inset-0 z-0 opacity-0">
         <EtherealShadow
           color="rgba(128, 128, 128, 0.5)"
           animation={{ scale: 100, speed: 90 }}
