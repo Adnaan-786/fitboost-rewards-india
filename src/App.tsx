@@ -1,7 +1,7 @@
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
@@ -57,7 +57,7 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 
 function App() {
   return (
-    <TooltipProvider>
+    <>
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -86,7 +86,7 @@ function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
-    </TooltipProvider>
+    </>
   );
 }
 
