@@ -7,6 +7,7 @@ import ExerciseLibrary from "@/components/workout/ExerciseLibrary";
 import WorkoutPlans from "@/components/workout/WorkoutPlans";
 import CustomWorkouts from "@/components/workout/CustomWorkouts";
 import SeedDataButton from "@/components/admin/SeedDataButton";
+import CleanupExercisesButton from "@/components/admin/CleanupExercisesButton";
 
 const SelfWorkout = () => {
   const navigate = useNavigate();
@@ -30,7 +31,10 @@ const SelfWorkout = () => {
               <p className="text-muted-foreground">Your personal fitness library</p>
             </div>
           </div>
-          <SeedDataButton />
+          <div className="flex gap-2">
+            <CleanupExercisesButton />
+            <SeedDataButton />
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

@@ -18,6 +18,22 @@ Deno.serve(async (req) => {
 
     console.log('Starting to seed workout data...');
 
+    // Check if data already exists
+    const { data: existingExercises } = await supabaseClient
+      .from('exercises')
+      .select('id')
+      .limit(1);
+
+    if (existingExercises && existingExercises.length > 0) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Workout data already exists. To reseed, please clear the exercises table first.'
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+      );
+    }
+
     // Insert sample exercises
     const exercises = [
       // Chest exercises
