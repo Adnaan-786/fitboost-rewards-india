@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import { Coins, Dumbbell, Flame, Droplet, Play, Pause, RotateCcw, LogOut, User } from 'lucide-react';
+import { Coins, Flame, Droplet, Play, Pause, RotateCcw, LogOut, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BackgroundGradientAnimation } from '@/components/ui/background-gradient-animation';
 import GradientMenu from '@/components/ui/gradient-menu';
@@ -17,6 +17,7 @@ import { SeedGymDataButton } from '@/components/admin/SeedGymDataButton';
 import { SeedMembershipButton } from '@/components/admin/SeedMembershipButton';
 import { SeedReelsButton } from '@/components/admin/SeedReelsButton';
 import { NeonButton } from '@/components/ui/neon-button';
+import vDesiLogo from '@/assets/v-desi-logo.jpeg';
 const Dashboard = () => {
   const {
     user,
@@ -176,7 +177,7 @@ const Dashboard = () => {
       <header className="border-b relative z-10 bg-background/30 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Dumbbell className="w-6 h-6 icon-gradient" />
+            <img src={vDesiLogo} alt="V-DESI Logo" className="w-8 h-8 object-contain" />
             <h1 className="text-2xl font-bold">V-DESI</h1>
           </div>
           <div className="flex items-center gap-4">
