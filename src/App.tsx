@@ -55,38 +55,39 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const App = () => (
-  <TooltipProvider>
-    <Toaster />
-    <Sonner />
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
-          <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
-          <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
-          <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
-          <Route path="/store" element={<ProtectedRoute><Store /></ProtectedRoute>} />
-          <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
-          <Route path="/my-gym" element={<ProtectedRoute><MyGym /></ProtectedRoute>} />
-          <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
-          <Route path="/self-workout" element={<ProtectedRoute><SelfWorkout /></ProtectedRoute>} />
-          <Route path="/workout-session/:sessionId" element={<ProtectedRoute><WorkoutSession /></ProtectedRoute>} />
-          <Route path="/workout-builder" element={<ProtectedRoute><WorkoutBuilder /></ProtectedRoute>} />
-          <Route path="/workout-day" element={<ProtectedRoute><WorkoutDay /></ProtectedRoute>} />
-          <Route path="/trainers" element={<ProtectedRoute><Trainers /></ProtectedRoute>} />
-          <Route path="/trainer/:trainerId" element={<ProtectedRoute><TrainerProfile /></ProtectedRoute>} />
-          <Route path="/apply" element={<ProtectedRoute><Apply /></ProtectedRoute>} />
-          <Route path="/admin/applications" element={<ProtectedRoute><AdminApplications /></ProtectedRoute>} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
-  </TooltipProvider>
-);
-
+function App() {
+  return (
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
+            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+            <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
+            <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
+            <Route path="/store" element={<ProtectedRoute><Store /></ProtectedRoute>} />
+            <Route path="/gyms" element={<ProtectedRoute><Gyms /></ProtectedRoute>} />
+            <Route path="/my-gym" element={<ProtectedRoute><MyGym /></ProtectedRoute>} />
+            <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+            <Route path="/self-workout" element={<ProtectedRoute><SelfWorkout /></ProtectedRoute>} />
+            <Route path="/workout-session/:sessionId" element={<ProtectedRoute><WorkoutSession /></ProtectedRoute>} />
+            <Route path="/workout-builder" element={<ProtectedRoute><WorkoutBuilder /></ProtectedRoute>} />
+            <Route path="/workout-day" element={<ProtectedRoute><WorkoutDay /></ProtectedRoute>} />
+            <Route path="/trainers" element={<ProtectedRoute><Trainers /></ProtectedRoute>} />
+            <Route path="/trainer/:trainerId" element={<ProtectedRoute><TrainerProfile /></ProtectedRoute>} />
+            <Route path="/apply" element={<ProtectedRoute><Apply /></ProtectedRoute>} />
+            <Route path="/admin/applications" element={<ProtectedRoute><AdminApplications /></ProtectedRoute>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </TooltipProvider>
+  );
+}
 
 export default App;
