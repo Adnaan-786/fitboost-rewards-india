@@ -7,8 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Dumbbell } from 'lucide-react';
 import { HeroGeometric } from '@/components/ui/shape-landing-hero';
+import vDesiLogo from '@/assets/v-desi-logo.jpeg';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -75,8 +75,8 @@ const Auth = () => {
       {/* Auth Card - Main Focus */}
       <Card className="relative z-10 w-full max-w-lg shadow-[0_20px_80px_rgba(0,0,0,0.5)] bg-card/98 backdrop-blur-md border-2 border-white/10">
         <CardHeader className="text-center space-y-3 pb-6">
-          <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-3" style={{ background: 'var(--gradient-primary)' }}>
-            <Dumbbell className="w-10 h-10 text-primary-foreground" />
+          <div className="mx-auto w-20 h-20 flex items-center justify-center mb-3">
+            <img src={vDesiLogo} alt="V-DESI Logo" className="w-20 h-20 object-contain" />
           </div>
           <CardTitle className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
             V-DESI
