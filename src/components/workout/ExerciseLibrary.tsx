@@ -18,6 +18,7 @@ interface Exercise {
   type: string;
   instructions: string;
   image_url: string | null;
+  video_url: string | null;
   calories_per_minute: number;
 }
 
@@ -227,7 +228,7 @@ const ExerciseLibrary = () => {
 
       {/* Exercise Details Dialog */}
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Dumbbell className="w-6 h-6 icon-gradient" />
@@ -238,30 +239,75 @@ const ExerciseLibrary = () => {
             </DialogDescription>
           </DialogHeader>
           {selectedExercise && (
-            <div className="space-y-4">
+            <div className="space-y-6">
+              {/* Visual Content */}
+              {(selectedExercise.video_url || selectedExercise.image_url) && (
+                <div className="rounded-lg overflow-hidden bg-muted">
+                  {selectedExercise.video_url ? (
+                    <video
+                      src={selectedExercise.video_url}
+                      controls
+                      loop
+                      className="w-full aspect-video object-cover"
+                      poster={selectedExercise.image_url || undefined}
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : selectedExercise.image_url ? (
+                    <img
+                      src={selectedExercise.image_url}
+                      alt={selectedExercise.name}
+                      className="w-full aspect-video object-cover"
+                    />
+                  ) : null}
+                </div>
+              )}
+
+              {/* Exercise Info Badges */}
               <div className="flex flex-wrap gap-2">
                 <Badge className={getMuscleGroupColor(selectedExercise.muscle_group)}>
-                  {selectedExercise.muscle_group.replace("_", " ")}
+                  {selectedExercise.muscle_group.replace("_", " ").toUpperCase()}
                 </Badge>
                 <Badge variant="outline">
-                  {selectedExercise.equipment.replace("_", " ")}
+                  Equipment: {selectedExercise.equipment.replace("_", " ")}
                 </Badge>
                 <Badge variant="outline">
-                  {selectedExercise.type}
+                  Type: {selectedExercise.type}
                 </Badge>
                 <Badge variant="outline">
                   {selectedExercise.calories_per_minute} cal/min
                 </Badge>
               </div>
               
+              {/* Instructions */}
               {selectedExercise.instructions && (
-                <div>
-                  <h4 className="font-semibold mb-2">Instructions</h4>
-                  <p className="text-sm text-muted-foreground whitespace-pre-line">
-                    {selectedExercise.instructions}
-                  </p>
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-lg">How to Perform</h4>
+                  <div className="space-y-2">
+                    {selectedExercise.instructions.split('\n').filter(line => line.trim()).map((step, index) => (
+                      <div key={index} className="flex gap-3">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+                          {index + 1}
+                        </div>
+                        <p className="text-sm text-muted-foreground flex-1 pt-0.5">
+                          {step.replace(/^\d+\.\s*/, '')}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
+
+              {/* Tips Section */}
+              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                <h4 className="font-semibold text-sm">💡 Pro Tips</h4>
+                <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                  <li>Maintain proper form throughout the movement</li>
+                  <li>Control the weight during both concentric and eccentric phases</li>
+                  <li>Breathe steadily - exhale on exertion, inhale on release</li>
+                  <li>Start with lighter weights to master the technique</li>
+                </ul>
+              </div>
             </div>
           )}
         </DialogContent>
