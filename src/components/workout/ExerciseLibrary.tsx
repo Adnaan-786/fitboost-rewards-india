@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Dumbbell, Search, Play } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,6 +29,8 @@ const ExerciseLibrary = () => {
   const [muscleFilter, setMuscleFilter] = useState("all");
   const [equipmentFilter, setEquipmentFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     fetchExercises();
@@ -198,7 +201,14 @@ const ExerciseLibrary = () => {
                       {exercise.instructions}
                     </p>
                   )}
-                  <Button className="w-full" variant="secondary">
+                  <Button 
+                    className="w-full" 
+                    variant="secondary"
+                    onClick={() => {
+                      setSelectedExercise(exercise);
+                      setDetailsOpen(true);
+                    }}
+                  >
                     <Play className="w-4 h-4 mr-2" />
                     View Details
                   </Button>
@@ -214,6 +224,48 @@ const ExerciseLibrary = () => {
           Showing {filteredExercises.length} of {exercises.length} exercises
         </div>
       )}
+
+      {/* Exercise Details Dialog */}
+      <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Dumbbell className="w-6 h-6 icon-gradient" />
+              {selectedExercise?.name}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedExercise?.description}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedExercise && (
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <Badge className={getMuscleGroupColor(selectedExercise.muscle_group)}>
+                  {selectedExercise.muscle_group.replace("_", " ")}
+                </Badge>
+                <Badge variant="outline">
+                  {selectedExercise.equipment.replace("_", " ")}
+                </Badge>
+                <Badge variant="outline">
+                  {selectedExercise.type}
+                </Badge>
+                <Badge variant="outline">
+                  {selectedExercise.calories_per_minute} cal/min
+                </Badge>
+              </div>
+              
+              {selectedExercise.instructions && (
+                <div>
+                  <h4 className="font-semibold mb-2">Instructions</h4>
+                  <p className="text-sm text-muted-foreground whitespace-pre-line">
+                    {selectedExercise.instructions}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
