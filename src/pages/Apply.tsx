@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { ArrowLeft, Dumbbell, CreditCard, Users, Handshake, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { NeonButton } from "@/components/ui/neon-button";
-import { toast } from "sonner";
+import { ApplicationForm } from "@/components/apply/ApplicationForm";
 
 const Apply = () => {
   const navigate = useNavigate();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState("");
 
   const applicationOptions = [
     {
@@ -40,9 +43,8 @@ const Apply = () => {
   ];
 
   const handleApplication = (type: string) => {
-    toast.success(`Application for ${type} initiated!`, {
-      description: "We'll get back to you soon with next steps.",
-    });
+    setSelectedType(type);
+    setIsFormOpen(true);
   };
 
   return (
@@ -93,6 +95,12 @@ const Apply = () => {
             );
           })}
         </div>
+
+        <ApplicationForm
+          open={isFormOpen}
+          onOpenChange={setIsFormOpen}
+          applicationType={selectedType}
+        />
       </div>
     </div>
   );

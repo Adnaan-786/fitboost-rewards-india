@@ -22,6 +22,7 @@ import WorkoutDay from "./pages/WorkoutDay";
 import Trainers from "./pages/Trainers";
 import TrainerProfile from "./pages/TrainerProfile";
 import Apply from "./pages/Apply";
+import AdminApplications from "./pages/AdminApplications";
 import NotFound from "./pages/NotFound";
 
 
@@ -79,6 +80,7 @@ const App = () => (
           <Route path="/trainers" element={<ProtectedRoute><Trainers /></ProtectedRoute>} />
           <Route path="/trainer/:trainerId" element={<ProtectedRoute><TrainerProfile /></ProtectedRoute>} />
           <Route path="/apply" element={<ProtectedRoute><Apply /></ProtectedRoute>} />
+          <Route path="/admin/applications" element={<ProtectedRoute><AdminApplications /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
