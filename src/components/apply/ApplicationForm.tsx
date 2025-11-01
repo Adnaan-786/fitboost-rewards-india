@@ -49,14 +49,36 @@ export const ApplicationForm = ({ open, onOpenChange, applicationType }: Applica
       contact_number: values.contact_number,
     });
 
-    setIsSubmitting(false);
-
     if (error) {
+      setIsSubmitting(false);
       toast.error("Failed to submit application", {
         description: error.message,
       });
       return;
     }
+
+    // Send email notification to admin
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("name")
+        .eq("id", user.id)
+        .single();
+
+      await supabase.functions.invoke("send-application-email", {
+        body: {
+          applicationType,
+          email: values.email,
+          contactNumber: values.contact_number,
+          userName: profile?.name || "Unknown User",
+        },
+      });
+    } catch (emailError) {
+      console.error("Failed to send email notification:", emailError);
+      // Don't fail the submission if email fails
+    }
+
+    setIsSubmitting(false);
 
     toast.success("Application submitted successfully!", {
       description: "Our admin team will review your application soon.",
