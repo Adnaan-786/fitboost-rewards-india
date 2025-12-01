@@ -13,6 +13,27 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Plus, MapPin, Calendar, Users, Trophy, BadgeCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import EventMap from '@/components/EventMap';
+import { z } from 'zod';
+
+// Validation schema for event creation
+const eventSchema = z.object({
+  title: z.string().min(5, 'Title must be at least 5 characters').max(200, 'Title must be less than 200 characters'),
+  description: z.string().max(2000, 'Description must be less than 2000 characters').optional(),
+  event_type: z.enum(['Competition', 'Workshop', 'Meetup', 'Challenge']),
+  location_name: z.string().min(2, 'Location name is required').max(200, 'Location name must be less than 200 characters'),
+  location_address: z.string().min(5, 'Address is required').max(500, 'Address must be less than 500 characters'),
+  latitude: z.number().min(-90, 'Latitude must be between -90 and 90').max(90, 'Latitude must be between -90 and 90').nullable().optional(),
+  longitude: z.number().min(-180, 'Longitude must be between -180 and 180').max(180, 'Longitude must be between -180 and 180').nullable().optional(),
+  event_date: z.string().min(1, 'Event date is required'),
+  event_time: z.string().optional(),
+  registration_deadline: z.string().optional(),
+  max_participants: z.number().int().positive('Max participants must be a positive number').max(100000, 'Max participants cannot exceed 100,000').nullable().optional(),
+  entry_fee: z.number().int().min(0, 'Entry fee cannot be negative').max(1000000, 'Entry fee cannot exceed 1,000,000').default(0),
+  prize_pool: z.number().int().min(0, 'Prize pool cannot be negative').max(100000000, 'Prize pool is too large').nullable().optional(),
+  image_url: z.string().url('Please enter a valid URL').max(2000, 'URL is too long').optional().or(z.literal(''))
+});
+
+type EventFormData = z.infer<typeof eventSchema>;
 
 const Events = () => {
   const { user } = useAuth();
@@ -23,6 +44,7 @@ const Events = () => {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   
   // Form state
   const [formData, setFormData] = useState({
@@ -73,6 +95,42 @@ const Events = () => {
     if (data) setProfile(data);
   };
 
+  const validateForm = (): EventFormData | null => {
+    setFormErrors({});
+    
+    // Convert form strings to proper types for validation
+    const dataToValidate = {
+      title: formData.title.trim(),
+      description: formData.description.trim() || undefined,
+      event_type: formData.event_type as 'Competition' | 'Workshop' | 'Meetup' | 'Challenge',
+      location_name: formData.location_name.trim(),
+      location_address: formData.location_address.trim(),
+      latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+      longitude: formData.longitude ? parseFloat(formData.longitude) : null,
+      event_date: formData.event_date,
+      event_time: formData.event_time || undefined,
+      registration_deadline: formData.registration_deadline || undefined,
+      max_participants: formData.max_participants ? parseInt(formData.max_participants, 10) : null,
+      entry_fee: formData.entry_fee ? parseInt(formData.entry_fee, 10) : 0,
+      prize_pool: formData.prize_pool ? parseInt(formData.prize_pool, 10) : null,
+      image_url: formData.image_url.trim() || undefined
+    };
+
+    const result = eventSchema.safeParse(dataToValidate);
+    
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        const field = err.path[0] as string;
+        errors[field] = err.message;
+      });
+      setFormErrors(errors);
+      return null;
+    }
+    
+    return result.data;
+  };
+
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -85,17 +143,35 @@ const Events = () => {
       return;
     }
 
+    const validatedData = validateForm();
+    if (!validatedData) {
+      toast({
+        variant: 'destructive',
+        title: 'Validation Error',
+        description: 'Please fix the errors in the form.'
+      });
+      return;
+    }
+
     setLoading(true);
 
     const { error } = await supabase
       .from('events')
       .insert({
-        ...formData,
-        latitude: parseFloat(formData.latitude) || null,
-        longitude: parseFloat(formData.longitude) || null,
-        max_participants: parseInt(formData.max_participants) || null,
-        entry_fee: parseInt(formData.entry_fee) || 0,
-        prize_pool: formData.prize_pool ? parseInt(formData.prize_pool) : null,
+        title: validatedData.title,
+        description: validatedData.description || null,
+        event_type: validatedData.event_type,
+        location_name: validatedData.location_name,
+        location_address: validatedData.location_address,
+        latitude: validatedData.latitude,
+        longitude: validatedData.longitude,
+        event_date: validatedData.event_date,
+        event_time: validatedData.event_time || null,
+        registration_deadline: validatedData.registration_deadline || null,
+        max_participants: validatedData.max_participants,
+        entry_fee: validatedData.entry_fee,
+        prize_pool: validatedData.prize_pool,
+        image_url: validatedData.image_url || null,
         organizer_id: user?.id
       });
 
@@ -128,30 +204,99 @@ const Events = () => {
         prize_pool: '',
         image_url: ''
       });
+      setFormErrors({});
     }
     
     setLoading(false);
   };
 
-  const handleRegister = async (eventId: string, maxParticipants: number, currentParticipants: number) => {
-    if (currentParticipants >= maxParticipants) {
+  const handleRegister = async (eventId: string) => {
+    if (!user?.id) {
       toast({
         variant: 'destructive',
-        title: 'Event Full',
-        description: 'This event has reached maximum capacity.'
+        title: 'Authentication Required',
+        description: 'Please log in to register for events.'
       });
       return;
     }
 
-    const { error } = await supabase
+    // First check if already registered
+    const { data: existingReg } = await supabase
+      .from('event_registrations')
+      .select('id')
+      .eq('event_id', eventId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (existingReg) {
+      toast({
+        variant: 'destructive',
+        title: 'Already Registered',
+        description: 'You are already registered for this event.'
+      });
+      return;
+    }
+
+    // Get current event data
+    const { data: eventData, error: fetchError } = await supabase
+      .from('events')
+      .select('current_participants, max_participants')
+      .eq('id', eventId)
+      .single();
+
+    if (fetchError || !eventData) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Unable to fetch event details.'
+      });
+      return;
+    }
+
+    const newCount = (eventData.current_participants || 0) + 1;
+
+    // Try to increment participant count - database constraint prevents overflow
+    const { error: incError } = await supabase
+      .from('events')
+      .update({ current_participants: newCount })
+      .eq('id', eventId);
+
+    if (incError) {
+      // Check if it's a constraint violation (event full)
+      if (incError.message?.includes('check_participants') || incError.code === '23514') {
+        toast({
+          variant: 'destructive',
+          title: 'Event Full',
+          description: 'This event has reached maximum capacity.'
+        });
+        return;
+      }
+      toast({
+        variant: 'destructive',
+        title: 'Registration Failed',
+        description: incError.message
+      });
+      return;
+    }
+
+    // Now insert the registration
+    const { error: regError } = await supabase
       .from('event_registrations')
       .insert({
         event_id: eventId,
-        user_id: user?.id
+        user_id: user.id
       });
 
-    if (error) {
-      if (error.code === '23505') {
+    if (regError) {
+      // Rollback: decrement the count
+      await supabase
+        .from('events')
+        .update({ 
+          current_participants: Math.max(0, newCount - 1)
+        })
+        .eq('id', eventId);
+
+      if (regError.code === '23505') {
         toast({
           variant: 'destructive',
           title: 'Already Registered',
@@ -161,21 +306,17 @@ const Events = () => {
         toast({
           variant: 'destructive',
           title: 'Registration Failed',
-          description: error.message
+          description: regError.message
         });
       }
-    } else {
-      await supabase
-        .from('events')
-        .update({ current_participants: currentParticipants + 1 })
-        .eq('id', eventId);
-
-      toast({
-        title: 'Registration Successful!',
-        description: 'You are now registered for this event.'
-      });
-      fetchEvents();
+      return;
     }
+
+    toast({
+      title: 'Registration Successful!',
+      description: 'You are now registered for this event.'
+    });
+    fetchEvents();
   };
 
   const getEventTypeColor = (type: string) => {
@@ -222,8 +363,10 @@ const Events = () => {
                         id="title"
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        maxLength={200}
                         required
                       />
+                      {formErrors.title && <p className="text-sm text-destructive mt-1">{formErrors.title}</p>}
                     </div>
                     
                     <div className="col-span-2">
@@ -233,7 +376,9 @@ const Events = () => {
                         rows={3}
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        maxLength={2000}
                       />
+                      {formErrors.description && <p className="text-sm text-destructive mt-1">{formErrors.description}</p>}
                     </div>
                     
                     <div>
@@ -249,6 +394,7 @@ const Events = () => {
                           <SelectItem value="Challenge">Challenge</SelectItem>
                         </SelectContent>
                       </Select>
+                      {formErrors.event_type && <p className="text-sm text-destructive mt-1">{formErrors.event_type}</p>}
                     </div>
                     
                     <div>
@@ -257,8 +403,10 @@ const Events = () => {
                         id="location_name"
                         value={formData.location_name}
                         onChange={(e) => setFormData({ ...formData, location_name: e.target.value })}
+                        maxLength={200}
                         required
                       />
+                      {formErrors.location_name && <p className="text-sm text-destructive mt-1">{formErrors.location_name}</p>}
                     </div>
                     
                     <div className="col-span-2">
@@ -267,30 +415,38 @@ const Events = () => {
                         id="location_address"
                         value={formData.location_address}
                         onChange={(e) => setFormData({ ...formData, location_address: e.target.value })}
+                        maxLength={500}
                         required
                       />
+                      {formErrors.location_address && <p className="text-sm text-destructive mt-1">{formErrors.location_address}</p>}
                     </div>
                     
                     <div>
-                      <Label htmlFor="latitude">Latitude</Label>
+                      <Label htmlFor="latitude">Latitude (-90 to 90)</Label>
                       <Input
                         id="latitude"
                         type="number"
                         step="0.000001"
+                        min="-90"
+                        max="90"
                         value={formData.latitude}
                         onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
                       />
+                      {formErrors.latitude && <p className="text-sm text-destructive mt-1">{formErrors.latitude}</p>}
                     </div>
                     
                     <div>
-                      <Label htmlFor="longitude">Longitude</Label>
+                      <Label htmlFor="longitude">Longitude (-180 to 180)</Label>
                       <Input
                         id="longitude"
                         type="number"
                         step="0.000001"
+                        min="-180"
+                        max="180"
                         value={formData.longitude}
                         onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
                       />
+                      {formErrors.longitude && <p className="text-sm text-destructive mt-1">{formErrors.longitude}</p>}
                     </div>
                     
                     <div>
@@ -302,6 +458,7 @@ const Events = () => {
                         onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
                         required
                       />
+                      {formErrors.event_date && <p className="text-sm text-destructive mt-1">{formErrors.event_date}</p>}
                     </div>
                     
                     <div>
@@ -329,9 +486,12 @@ const Events = () => {
                       <Input
                         id="max_participants"
                         type="number"
+                        min="1"
+                        max="100000"
                         value={formData.max_participants}
                         onChange={(e) => setFormData({ ...formData, max_participants: e.target.value })}
                       />
+                      {formErrors.max_participants && <p className="text-sm text-destructive mt-1">{formErrors.max_participants}</p>}
                     </div>
                     
                     <div>
@@ -339,9 +499,12 @@ const Events = () => {
                       <Input
                         id="entry_fee"
                         type="number"
+                        min="0"
+                        max="1000000"
                         value={formData.entry_fee}
                         onChange={(e) => setFormData({ ...formData, entry_fee: e.target.value })}
                       />
+                      {formErrors.entry_fee && <p className="text-sm text-destructive mt-1">{formErrors.entry_fee}</p>}
                     </div>
                     
                     <div>
@@ -349,9 +512,12 @@ const Events = () => {
                       <Input
                         id="prize_pool"
                         type="number"
+                        min="0"
+                        max="100000000"
                         value={formData.prize_pool}
                         onChange={(e) => setFormData({ ...formData, prize_pool: e.target.value })}
                       />
+                      {formErrors.prize_pool && <p className="text-sm text-destructive mt-1">{formErrors.prize_pool}</p>}
                     </div>
                     
                     <div className="col-span-2">
@@ -361,7 +527,9 @@ const Events = () => {
                         type="url"
                         value={formData.image_url}
                         onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                        maxLength={2000}
                       />
+                      {formErrors.image_url && <p className="text-sm text-destructive mt-1">{formErrors.image_url}</p>}
                     </div>
                   </div>
                   
@@ -465,38 +633,43 @@ const Events = () => {
                   )}
                   
                   {event.prize_pool > 0 && (
-                    <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-green-600">
                       <Trophy className="w-4 h-4" />
-                      <span>Prize Pool: ₹{event.prize_pool.toLocaleString()}</span>
+                      <span>₹{event.prize_pool.toLocaleString()} prize pool</span>
                     </div>
                   )}
                   
-                  <div className="pt-2 space-y-2">
-                    {event.entry_fee > 0 && (
-                      <p className="text-sm font-medium">Entry Fee: ₹{event.entry_fee}</p>
-                    )}
+                  <div className="flex items-center justify-between pt-2 border-t">
+                    <span className="text-sm font-medium">
+                      {event.entry_fee > 0 ? `₹${event.entry_fee} entry` : 'Free entry'}
+                    </span>
                     <Button 
-                      className="w-full"
-                      onClick={() => handleRegister(event.id, event.max_participants, event.current_participants || 0)}
+                      size="sm"
+                      onClick={() => handleRegister(event.id)}
+                      disabled={event.max_participants && event.current_participants >= event.max_participants}
                     >
-                      Register Now
+                      {event.max_participants && event.current_participants >= event.max_participants 
+                        ? 'Full' 
+                        : 'Register Now'}
                     </Button>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
+          
+          {events.length === 0 && (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="font-semibold mb-2">No Upcoming Events</h3>
+                <p className="text-muted-foreground">
+                  Check back later for new fitness events and competitions!
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
-
-        {events.length === 0 && (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <Calendar className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No Upcoming Events</h3>
-              <p className="text-muted-foreground">Check back later for exciting fitness events!</p>
-            </CardContent>
-          </Card>
-        )}
       </main>
     </div>
   );

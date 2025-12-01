@@ -1,0 +1,2 @@
+ALTER TABLE events DROP CONSTRAINT IF EXISTS check_participants;
+ALTER TABLE events ADD CONSTRAINT check_participants CHECK (max_participants IS NULL OR current_participants IS NULL OR current_participants <= max_participants)
